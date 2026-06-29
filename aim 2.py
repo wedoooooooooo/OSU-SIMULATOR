@@ -1,4 +1,4 @@
-# brings pygame into existence
+    # brings pygame into existence
 import pygame
 from sys import exit
 import random
@@ -101,6 +101,16 @@ while True:
 
                     # adds score after each iteration
                     count += int(1)
+
+        # IF the player isnt colliding with the ball and still presses the key: deduct count 
+        elif pygame.sprite.collide_rect(player_real, ball_real) == False:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x or event.key == pygame.K_z:
+                    # line 110 111 prevents negative count
+                    if count <= 3:
+                        count = 0
+                    else:
+                        count -= int(3)
 
     # updates the game 144 times a second 
     pygame.display.update()
