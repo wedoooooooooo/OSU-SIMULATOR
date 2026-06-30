@@ -39,7 +39,7 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (pos_x,pos_y))
 
 sprite_ball = pygame.sprite.GroupSingle()
-ball_real = Ball(sprite_ball, pos_x=100, pos_y=100)
+ball_real = Ball(sprite_ball, pos_x=300, pos_y=300)
 
 class Button(pygame.sprite.Sprite):
     def __init__(self, *groups, pos_x, pos_y, pressed_state):
@@ -74,8 +74,17 @@ pygame.event.set_grab(True)
 ## the events below will happen during the game's runtime
 while True:
 
+    ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later
+    for sprite in sprite_ball:
+        x = sprite.rect.centerx
+        y = sprite.rect.centery
+
     # turns the background white
-    screen.fill('White')
+    screen.fill('white')
+
+    # draws a line from the position the cursor to the center of the circle/ball's current position - iterates every frame
+    # layered over the white background but under the upgrade button to avoid awkward overlap 
+    pygame.draw.line(screen, 'pink', (x, y), pygame.mouse.get_pos(), 4)
 
     # this will draw out the main background, which will underlay **EVERYTHING ELSE**.
     sprite_button.draw(screen)
@@ -92,11 +101,6 @@ while True:
     sprite_ball.draw(screen)
     sprite_player.draw(screen)
     screen.blit(score, score_rect)
-
-    ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later
-    for sprite in sprite_ball:
-        x = sprite.rect.x
-        y = sprite.rect.y
 
     ## events that will be trigged through a pygame event (input and such) will go under here
     for event in pygame.event.get():
