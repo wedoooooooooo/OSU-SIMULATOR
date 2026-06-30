@@ -100,10 +100,10 @@ while True:
 
 ### the lines below up until 'for event in pygame.event.get():' draws out the sprites and text that the game currently needs.
 
-    sprite_button.draw(screen)
+    # draws out the sprite in order of the line number
     sprite_ball.draw(screen)
     sprite_menuGUI.draw(screen)
-    sprite_ball.draw(screen)
+    sprite_button.draw(screen)
 
     # defintes text content to later be blit (cant be done outside of while True, otherwise the content of the text cant be iterately updated).
     score = test_font.render('Score: ' + str(count), True, 'black')
