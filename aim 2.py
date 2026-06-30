@@ -1,4 +1,4 @@
-    # brings pygame into existence
+# brings pygame into existence
 import pygame
 from sys import exit
 import random
@@ -55,6 +55,20 @@ toggle = False
 ## the count variable here is actually really important because it will be the integer display of the scoring system
 count = 0
 
+# this will be the visuals for the Upgrade menu
+class Menu(pygame.sprite.Sprite):
+
+    # theres a graphic argument to 1. increase flexibility of the sprites and 2. combine all FIXED Upgrade menu visuals into a single sprite group later on
+    def __init__(self, *groups, pos_x, pos_y, graphic):
+        super().__init__(*groups)
+        self.image = pygame.image.load(graphic).convert_alpha()
+        self.rect = self.image.get_rect(center = (pos_x, pos_y))
+
+# this will define the Upgrade menu sprite group, which contains all fixed graphics of the menu (eg the background/ upgrade text) 
+sprite_menuGUI = pygame.sprite.Group()
+menuGUI = Menu(sprite_menuGUI, pos_x=725, pos_y=300, graphic='graphics1/popoutmenu1.png')
+upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='graphics1/upgrade.png')
+
 pygame.event.set_grab(True)
 
 ## the events below will happen during the game's runtime
@@ -63,7 +77,11 @@ while True:
     # turns the background white
     screen.fill('White')
 
+    # this will draw out the main background, which will underlay **EVERYTHING ELSE**.
     sprite_button.draw(screen)
+
+    # this will draw out the Upgrade menu sprite group
+    sprite_menuGUI.draw(screen)
 
     # you cant blit a font render outside of 'while True', sad
     score = test_font.render('Score: ' + str(count), True, 'black')
@@ -107,7 +125,7 @@ while True:
                     toggle = True
                     button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='graphics1/buttonpressed.png')
                     # changes window size
-                    screen = pygame.display.set_mode((750,600))
+                    screen = pygame.display.set_mode((850,600))
 
         ## checks when the player's mouse pos (or the player sprite that follows the pos) collides with the ball/circle
         if pygame.sprite.collide_rect(player_real, ball_real):
