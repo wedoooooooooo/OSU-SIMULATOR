@@ -3,6 +3,7 @@ import pygame
 from sys import exit
 import random
 pygame.init()
+import math
 
 # 600x600 will be the resolution of the game
 screen = pygame.display.set_mode((600,600))
@@ -41,7 +42,6 @@ class Ball(pygame.sprite.Sprite):
 
 sprite_ball = pygame.sprite.GroupSingle()
 ball_real = Ball(sprite_ball, pos_x=300, pos_y=300)
-
 class Button(pygame.sprite.Sprite):
     def __init__(self, *groups, pos_x, pos_y, pressed_state):
         super().__init__(*groups)
@@ -55,14 +55,13 @@ toggle = False
 
 # this will be the visuals for the Upgrade menu
 class Menu(pygame.sprite.Sprite):
-
     # theres a graphic argument to 1. increase flexibility of the sprites and 2. combine all FIXED Upgrade menu visuals into a single sprite group later on.
     def __init__(self, *groups, pos_x, pos_y, graphic):
         super().__init__(*groups)
         self.image = pygame.image.load(graphic).convert_alpha()
         self.rect = self.image.get_rect(center = (pos_x, pos_y))
 
-# this will define the Upgrade menu sprite group, which contains all fixed graphics of the menu (eg the background/ upgrade text). 
+## this will define the Upgrade menu sprite group, which contains all fixed graphics of the menu (eg the background/ upgrade text). 
 sprite_menuGUI = pygame.sprite.Group()
 menuGUI = Menu(sprite_menuGUI, pos_x=725, pos_y=300, graphic='upgrademenu/popoutmenu1.png')
 upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='upgrademenu/upgrade.png')
@@ -70,17 +69,17 @@ upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='upgrademenu/up
 ## there will be three variables assigned to each upgrade button: the main title sprite, the buy button sprite, and its cost (-x score).
 value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='upgrademenu/value_upgrade.png')
 value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='upgrademenu/buy_value.png')
+# the player owns 0 value upgrades by default
+owned_value = 0
+# the first step in the value upgrade will cost 10 score; the default gain (which will be increased through this update) is 1.
+gain = 1
+cost = 10
 
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
-
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
 count = 0
-
-# the first step in the value upgrade will cost 10 score; the default gain (which will be increased through this update) is 1.
-cost = 10
-gain = 1
 
 ## the events below will happen during the game's runtime.
 while True:
@@ -90,6 +89,10 @@ while True:
         x = sprite.rect.centerx
         y = sprite.rect.centery
 
+    ### for every value upgrade from the 2nd step onwards, calculate the upgrade's cost: 10 * (1.14 ^ number of owned upgrades).
+    if int(owned_value) > 0:
+        cost = round(float(10 * math.pow(1.14, int(owned_value))), 1)
+    
     ## the game will draw out the main background first because it underlaps **EVERYTHING ELSE**.
     # turns the background white
     screen.fill('white')
@@ -105,13 +108,19 @@ while True:
     sprite_menuGUI.draw(screen)
     sprite_button.draw(screen)
 
-    # defintes text content to later be blit (cant be done outside of while True, otherwise the content of the text cant be iterately updated).
-    score = test_font.render('Score: ' + str(count), True, 'black')
+    ##  defines text content to later be blit (cant be done outside of while True, otherwise the content of the text wont be iterately updated).
+    score = test_font.render('Score: ' + str(round(count, 1)), True, 'black')
     score_rect = score.get_rect(center = (300, 50))
-    vupgrade_cost = upgrade_font.render('COST: 10' , True, 'white')
-    vupgrade_cost_rect = vupgrade_cost.get_rect(center = (700, 150))
 
+    gain_text = test_font.render('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', True, 'black')
+    gain_text_rect = gain_text.get_rect(center = (300, 80))
+
+    vupgrade_cost = upgrade_font.render('COST: ' + str(cost) , True, 'white')
+    vupgrade_cost_rect = vupgrade_cost.get_rect(center = (690, 150))
+
+    # bliting every text rect onto the screen
     screen.blit(score, score_rect)
+    screen.blit(gain_text, gain_text_rect)
     screen.blit(vupgrade_cost, vupgrade_cost_rect)
 
     # the player sprite has the highest sprite order priority because it will overlap **EVERYTHING ELSE** - thus being the last sprite drawn.
@@ -171,7 +180,7 @@ while True:
                         sprite.rect.center = (x, y)
 
                     # adds score after each iteration
-                    count += int(gain)
+                    count += float(gain)
 
         # IF the player isnt colliding with the ball and still presses the key: deduct count.
         elif pygame.sprite.collide_rect(player_real, ball_real) == False:
@@ -188,8 +197,9 @@ while True:
         ## checks when the player is hovering over the value upgrade button
         if pygame.sprite.collide_rect(player_real, value_upgrade_buybutton):
             if event.type == pygame.MOUSEBUTTONDOWN and count >= cost:
-                count = int(count) - int(cost)
-                gain = int(gain) * 2
+                count = float(count) - float(cost)
+                gain = float(gain) * 1.12
+                owned_value = int(owned_value) + 1
 
     # updates the game 144 times a second. 
     pygame.display.update()
