@@ -57,11 +57,15 @@ owned_value = 0
 gain = 1
 cost_value = 10
 
-# auto_machine = 0
-# cost_auto = 50
+auto_machine = 0
+cost_auto = 25
+auto_gain = 0
 
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
-count = 0
+count = 1000
+
+update_count = pygame.USEREVENT + 1
+pygame.time.set_timer(update_count, 1000)
 
 ## this is the text sprite group which will contain all text that is used in the game (eg score, gain, cost, etc).
 sprite_text = pygame.sprite.Group()
@@ -69,7 +73,7 @@ score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(float(co
 gain_text = Text(sprite_text, font_size=30, text='Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', color='black', pos_x=300, pos_y=85)
 
 vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_value)), color='white', pos_x=690, pos_y=150)
-# aupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_auto)), color='white', pos_x=690, pos_y=250)
+aupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_auto)), color='white', pos_x=690, pos_y=250)
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
@@ -80,7 +84,7 @@ while True:
     score_text.update_text('Score: ' + str(round(float(count), 1)), 'black')
     gain_text.update_text('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', 'black')
     vupgrade_cost_text.update_text('COST: ' + str(float(cost_value)), 'white')
-    # aupgrade_cost_text.update_text('COST: ' + str(float(cost_auto)), 'white')
+    aupgrade_cost_text.update_text('COST: ' + str(float(cost_auto)), 'white')
 
     ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later.
     for sprite in sprite_ball:
@@ -180,6 +184,15 @@ while True:
                 count = float(count) - float(cost_value)
                 gain = float(gain) * 1.12
                 owned_value = int(owned_value) + 1
+                
+        if pygame.sprite.collide_rect(player_real, auto_upgrade_buybutton):
+            if event.type == pygame.MOUSEBUTTONDOWN and count >= cost_auto:
+                count = float(count) - float(cost_auto)
+                auto_machine = int(auto_machine) + 1
+                cost_auto = round(float(25 * math.pow(1.17, int(auto_machine))), 1)
+
+        if event.type == update_count:
+            count = float(count) + (float(gain) * float(auto_machine))
 
     # updates the game 144 times a second. 
     pygame.display.update()
