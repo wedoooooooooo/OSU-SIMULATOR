@@ -62,7 +62,7 @@ cost_auto = 25
 auto_gain = 0
 
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
-count = 1000
+count = 0
 
 update_count = pygame.USEREVENT + 1
 pygame.time.set_timer(update_count, 1000)
@@ -93,7 +93,7 @@ while True:
 
     ### for every value upgrade from the 2nd step onwards, calculate the upgrade's cost: 10 * (1.14 ^ number of owned upgrades).
     if int(owned_value) > 0:
-        cost_value = round(float(10 * math.pow(1.14, int(owned_value))), 1)
+        cost_value = round(float(10 * math.pow(1.17, int(owned_value))), 1)
 
     ## the game will draw out the main background first because it underlaps **EVERYTHING ELSE**.
     # turns the background white
@@ -182,7 +182,7 @@ while True:
         if pygame.sprite.collide_rect(player_real, value_upgrade_buybutton):
             if event.type == pygame.MOUSEBUTTONDOWN and count >= cost_value:
                 count = float(count) - float(cost_value)
-                gain = float(gain) * 1.12
+                gain = float(gain) * 1.155
                 owned_value = int(owned_value) + 1
                 
         if pygame.sprite.collide_rect(player_real, auto_upgrade_buybutton):
