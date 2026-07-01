@@ -56,14 +56,16 @@ cost = 10
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
 count = 0
 
+## this is the text sprite group which will contain all text that is used in the game (eg score, gain, cost, etc).
 sprite_text = pygame.sprite.Group()
-score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(count, 1)), color='black', pos_x=300, pos_y=50)
-
+score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(float(count), 1)), color='black', pos_x=300, pos_y=50)
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
 ## the events below will happen during the game's runtime.
 while True:
+
+    score_text.update_text('Score: ' + str(round(float(count), 1)), 'black')
 
     ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later.
     for sprite in sprite_ball:
@@ -73,7 +75,7 @@ while True:
     ### for every value upgrade from the 2nd step onwards, calculate the upgrade's cost: 10 * (1.14 ^ number of owned upgrades).
     if int(owned_value) > 0:
         cost = round(float(10 * math.pow(1.14, int(owned_value))), 1)
-    
+
     ## the game will draw out the main background first because it underlaps **EVERYTHING ELSE**.
     # turns the background white
     screen.fill('white')
@@ -96,7 +98,7 @@ while True:
     gain_text = test_font.render('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', True, 'black')
     gain_text_rect = gain_text.get_rect(center = (300, 80))
 
-    vupgrade_cost = upgrade_font.render('COST: ' + str(cost) , True, 'white')
+    vupgrade_cost = upgrade_font.render('COST: ' + str(float(cost)) , True, 'white')
     vupgrade_cost_rect = vupgrade_cost.get_rect(center = (690, 150))
 
     # bliting every text rect onto the screen
@@ -158,7 +160,7 @@ while True:
                         sprite.rect.center = (x, y)
 
                     # adds score after each iteration
-                    count += float(gain)
+                    count = float(count) + float(gain)
 
         # IF the player isnt colliding with the ball and still presses the key: deduct count.
         elif pygame.sprite.collide_rect(player_real, ball_real) == False:
