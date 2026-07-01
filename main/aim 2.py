@@ -1,9 +1,16 @@
 # brings pygame into existence
 import pygame
 from sys import exit
-import random
 pygame.init()
+
 import math
+import random
+
+from menu import Menu
+from player import Player
+from ball import Ball
+from button import Button
+from text import Text
 
 # 600x600 will be the resolution of the game
 screen = pygame.display.set_mode((600,600))
@@ -18,48 +25,17 @@ clock = pygame.time.Clock()
 test_font = pygame.font.Font(None, 50)
 upgrade_font = pygame.font.Font(None, 30)
 
-## creates a player sprite containing the image (1), fill (2) and default position (3).
-class Player(pygame.sprite.Sprite):
-    # we use *groups so the sprite is able to be put in zero or as many groups as we like.
-    def __init__(self, *groups, pos_x, pos_y):
-        super().__init__(*groups)
-
-        self.image = pygame.image.load('graphics1/blue.png').convert_alpha() # (1)
-        self.image.fill('blue') # (2)
-        self.rect = self.image.get_rect(center = (pos_x,pos_y)) # (3)
-
 # puts the player sprite into a single group and sets the default location of it through pos_x and pos_y. 
 sprite_player = pygame.sprite.GroupSingle()
 player_real = Player(sprite_player, pos_x=300, pos_y=300)
 
-## basically the same progress as line 28-40
-class Ball(pygame.sprite.Sprite):
-    def __init__(self, *groups, pos_x, pos_y):
-        super().__init__(*groups)
-
-        self.image = pygame.image.load('graphics1/ball.png').convert_alpha()
-        self.rect = self.image.get_rect(center = (pos_x,pos_y))
-
 sprite_ball = pygame.sprite.GroupSingle()
 ball_real = Ball(sprite_ball, pos_x=300, pos_y=300)
-class Button(pygame.sprite.Sprite):
-    def __init__(self, *groups, pos_x, pos_y, pressed_state):
-        super().__init__(*groups)
-        self.image = pygame.image.load(pressed_state).convert_alpha()
-        self.rect = self.image.get_rect(center = (pos_x,pos_y))
 
 sprite_button = pygame.sprite.Group()
 button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='graphics1/buttonunpressed.png')
 # sets the default state of the button to a bool value (False) of a variable (toggle), in which the variable will later be toggled to activate certain behaviours.
 toggle = False 
-
-# this will be the visuals for the Upgrade menu
-class Menu(pygame.sprite.Sprite):
-    # theres a graphic argument to 1. increase flexibility of the sprites and 2. combine all FIXED Upgrade menu visuals into a single sprite group later on.
-    def __init__(self, *groups, pos_x, pos_y, graphic):
-        super().__init__(*groups)
-        self.image = pygame.image.load(graphic).convert_alpha()
-        self.rect = self.image.get_rect(center = (pos_x, pos_y))
 
 ## this will define the Upgrade menu sprite group, which contains all fixed graphics of the menu (eg the background/ upgrade text). 
 sprite_menuGUI = pygame.sprite.Group()
@@ -69,17 +45,22 @@ upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='upgrademenu/up
 ## there will be three variables assigned to each upgrade button: the main title sprite, the buy button sprite, and its cost (-x score).
 value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='upgrademenu/value_upgrade.png')
 value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='upgrademenu/buy_value.png')
+
 # the player owns 0 value upgrades by default
 owned_value = 0
+
 # the first step in the value upgrade will cost 10 score; the default gain (which will be increased through this update) is 1.
 gain = 1
 cost = 10
 
-# locks the cursor inside the main game window
-pygame.event.set_grab(True)
-
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
 count = 0
+
+sprite_text = pygame.sprite.Group()
+score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(count, 1)), color='black', pos_x=300, pos_y=50)
+
+# locks the cursor inside the main game window
+pygame.event.set_grab(True)
 
 ## the events below will happen during the game's runtime.
 while True:
@@ -102,15 +83,15 @@ while True:
     pygame.draw.line(screen, 'pink', (x, y), pygame.mouse.get_pos(), 4)
 
 ### the lines below up until 'for event in pygame.event.get():' draws out the sprites and text that the game currently needs.
-
     # draws out the sprite in order of the line number
     sprite_ball.draw(screen)
     sprite_menuGUI.draw(screen)
     sprite_button.draw(screen)
 
+    sprite_text.draw(screen)
     ##  defines text content to later be blit (cant be done outside of while True, otherwise the content of the text wont be iterately updated).
-    score = test_font.render('Score: ' + str(round(count, 1)), True, 'black')
-    score_rect = score.get_rect(center = (300, 50))
+    # score = test_font.render('Score: ' + str(round(count, 1)), True, 'black')
+    # score_rect = score.get_rect(center = (300, 50))
 
     gain_text = test_font.render('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', True, 'black')
     gain_text_rect = gain_text.get_rect(center = (300, 80))
@@ -119,7 +100,7 @@ while True:
     vupgrade_cost_rect = vupgrade_cost.get_rect(center = (690, 150))
 
     # bliting every text rect onto the screen
-    screen.blit(score, score_rect)
+    # screen.blit(score, score_rect)
     screen.blit(gain_text, gain_text_rect)
     screen.blit(vupgrade_cost, vupgrade_cost_rect)
 
@@ -127,11 +108,8 @@ while True:
     sprite_player.draw(screen)
 
 ### events in the for condition below are those that will be trigged through a pygame event (input and such).
-
-    for event in pygame.event.get():
-
 ### the if condititions below will be reserved for GENERAL SETUP
-
+    for event in pygame.event.get():
         ## when the player presses ESCAPE, the game will exit.
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             pygame.quit()
