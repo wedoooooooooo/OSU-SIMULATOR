@@ -56,7 +56,9 @@ owned_value = 0
 # the first step in the value upgrade will cost 10 score; the default gain (which will be increased through this update) is 1.
 gain = 1
 cost_value = 10
-cost_auto = 50
+
+# auto_machine = 0
+# cost_auto = 50
 
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
 count = 0
@@ -68,7 +70,6 @@ gain_text = Text(sprite_text, font_size=30, text='Gain: ~ ' + str(round(float(ga
 
 vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_value)), color='white', pos_x=690, pos_y=150)
 # aupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_auto)), color='white', pos_x=690, pos_y=250)
-aupgrade_cost_text = Text(sprite_text, font_size=20, text='under construction', color='white', pos_x=690, pos_y=250)
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
@@ -175,8 +176,8 @@ while True:
 
         ## checks when the player is hovering over the value upgrade button
         if pygame.sprite.collide_rect(player_real, value_upgrade_buybutton):
-            if event.type == pygame.MOUSEBUTTONDOWN and count >= cost:
-                count = float(count) - float(cost)
+            if event.type == pygame.MOUSEBUTTONDOWN and count >= cost_value:
+                count = float(count) - float(cost_value)
                 gain = float(gain) * 1.12
                 owned_value = int(owned_value) + 1
 
