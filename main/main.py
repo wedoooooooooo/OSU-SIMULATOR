@@ -43,11 +43,11 @@ menuGUI = Menu(sprite_menuGUI, pos_x=725, pos_y=300, graphic='assets/upgrademenu
 upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='assets/upgrademenu/upgrade.png')
 
 ## there will be three variables assigned to each upgrade button: the main title sprite, the buy button sprite, and its cost (-x score).
-value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='assets/upgrademenu/value_upgrade.png')
+value_upgrade_title = Menu(sprite_menuGUI, pos_x=700, pos_y=100, graphic='assets/upgrademenu/value_upgrade.png')
 value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='assets/upgrademenu/buy_value.png')
 
 # these lines will be for the auto upgrade button
-auto_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=200, graphic='assets/upgrademenu/auto_upgrade.png')
+auto_upgrade_title = Menu(sprite_menuGUI, pos_x=700, pos_y=200, graphic='assets/upgrademenu/auto_upgrade.png')
 auto_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=250, graphic='assets/upgrademenu/buy_auto.png')
 
 # the player owns 0 value upgrades by default
@@ -74,6 +74,10 @@ gain_text = Text(sprite_text, font_size=30, text='Gain: ~ ' + str(round(float(ga
 
 vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_value)), color='white', pos_x=690, pos_y=150)
 aupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_auto)), color='white', pos_x=690, pos_y=250)
+
+vupgrade_amount_text = Text(sprite_text, font_size=40, text='x' + str(owned_value), color='white', pos_x=800, pos_y=100)
+aupgrade_amount_text = Text(sprite_text, font_size=40, text='x' + str(auto_machine), color='white', pos_x=800, pos_y=200)
+
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
@@ -83,8 +87,12 @@ while True:
     # fetches text that will have its contents updated.
     score_text.update_text('Score: ' + str(round(float(count), 1)), 'black')
     gain_text.update_text('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', 'black')
+
     vupgrade_cost_text.update_text('COST: ' + str(float(cost_value)), 'white')
     aupgrade_cost_text.update_text('COST: ' + str(float(cost_auto)), 'white')
+
+    vupgrade_amount_text.update_text('x' + str(owned_value), 'white')
+    aupgrade_amount_text.update_text('x' + str(auto_machine), 'white')
 
     ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later.
     for sprite in sprite_ball:
