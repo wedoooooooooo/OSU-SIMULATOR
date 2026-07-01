@@ -5,5 +5,5 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, *groups, pos_x, pos_y):
         super().__init__(*groups)
 
-        self.image = pygame.image.load('graphics1/ball.png').convert_alpha()
+        self.image = pygame.image.load('assets/graphics1/ball.png').convert_alpha()
         self.rect = self.image.get_rect(center = (pos_x,pos_y))

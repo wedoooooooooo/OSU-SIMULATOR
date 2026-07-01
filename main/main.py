@@ -33,18 +33,18 @@ sprite_ball = pygame.sprite.GroupSingle()
 ball_real = Ball(sprite_ball, pos_x=300, pos_y=300)
 
 sprite_button = pygame.sprite.Group()
-button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='graphics1/buttonunpressed.png')
+button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='assets/graphics1/buttonunpressed.png')
 # sets the default state of the button to a bool value (False) of a variable (toggle), in which the variable will later be toggled to activate certain behaviours.
 toggle = False 
 
 ## this will define the Upgrade menu sprite group, which contains all fixed graphics of the menu (eg the background/ upgrade text). 
 sprite_menuGUI = pygame.sprite.Group()
-menuGUI = Menu(sprite_menuGUI, pos_x=725, pos_y=300, graphic='upgrademenu/popoutmenu1.png')
-upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='upgrademenu/upgrade.png')
+menuGUI = Menu(sprite_menuGUI, pos_x=725, pos_y=300, graphic='assets/upgrademenu/popoutmenu1.png')
+upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='assets/upgrademenu/upgrade.png')
 
 ## there will be three variables assigned to each upgrade button: the main title sprite, the buy button sprite, and its cost (-x score).
-value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='upgrademenu/value_upgrade.png')
-value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='upgrademenu/buy_value.png')
+value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='assets/upgrademenu/value_upgrade.png')
+value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='assets/upgrademenu/buy_value.png')
 
 # the player owns 0 value upgrades by default
 owned_value = 0
@@ -131,12 +131,12 @@ while True:
                 # this is for the default state of the button (FALSE)
                 if toggle:
                     toggle = False
-                    button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='graphics1/buttonunpressed.png')
+                    button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='assets/graphics1/buttonunpressed.png')
                     screen = pygame.display.set_mode((600,600))
                 # this is for the changed state of the button (TRUE)
                 else:
                     toggle = True
-                    button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='graphics1/buttonpressed.png')
+                    button = Button(sprite_button, pos_x=500, pos_y=70, pressed_state='assets/graphics1/buttonpressed.png')
                     # changes window size
                     screen = pygame.display.set_mode((850,600))
 
