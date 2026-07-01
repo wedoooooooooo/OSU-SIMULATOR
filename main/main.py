@@ -59,13 +59,19 @@ count = 0
 ## this is the text sprite group which will contain all text that is used in the game (eg score, gain, cost, etc).
 sprite_text = pygame.sprite.Group()
 score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(float(count), 1)), color='black', pos_x=300, pos_y=50)
+gain_text = Text(sprite_text, font_size=30, text='Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', color='black', pos_x=300, pos_y=85)
+vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost)), color='white', pos_x=690, pos_y=150)
+
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
 ## the events below will happen during the game's runtime.
 while True:
 
+    # fetches text that will have its contents updated.
     score_text.update_text('Score: ' + str(round(float(count), 1)), 'black')
+    gain_text.update_text('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', 'black')
+    vupgrade_cost_text.update_text('COST: ' + str(float(cost)), 'white')
 
     ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later.
     for sprite in sprite_ball:
@@ -84,27 +90,12 @@ while True:
     # layered over the white background but under the upgrade button to avoid awkward overlap.
     pygame.draw.line(screen, 'pink', (x, y), pygame.mouse.get_pos(), 4)
 
-### the lines below up until 'for event in pygame.event.get():' draws out the sprites and text that the game currently needs.
-    # draws out the sprite in order of the line number
+### the lines below up until 'for event in pygame.event.get():' draws out the sprites and text that the game currently needs in order of linenum.
+
     sprite_ball.draw(screen)
     sprite_menuGUI.draw(screen)
     sprite_button.draw(screen)
-
     sprite_text.draw(screen)
-    ##  defines text content to later be blit (cant be done outside of while True, otherwise the content of the text wont be iterately updated).
-    # score = test_font.render('Score: ' + str(round(count, 1)), True, 'black')
-    # score_rect = score.get_rect(center = (300, 50))
-
-    gain_text = test_font.render('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', True, 'black')
-    gain_text_rect = gain_text.get_rect(center = (300, 80))
-
-    vupgrade_cost = upgrade_font.render('COST: ' + str(float(cost)) , True, 'white')
-    vupgrade_cost_rect = vupgrade_cost.get_rect(center = (690, 150))
-
-    # bliting every text rect onto the screen
-    # screen.blit(score, score_rect)
-    screen.blit(gain_text, gain_text_rect)
-    screen.blit(vupgrade_cost, vupgrade_cost_rect)
 
     # the player sprite has the highest sprite order priority because it will overlap **EVERYTHING ELSE** - thus being the last sprite drawn.
     sprite_player.draw(screen)
