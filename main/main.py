@@ -46,12 +46,17 @@ upgrade_icon = Menu(sprite_menuGUI, pos_x=725, pos_y=50, graphic='assets/upgrade
 value_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=100, graphic='assets/upgrademenu/value_upgrade.png')
 value_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=150, graphic='assets/upgrademenu/buy_value.png')
 
+# these lines will be for the auto upgrade button
+auto_upgrade_title = Menu(sprite_menuGUI, pos_x=725, pos_y=200, graphic='assets/upgrademenu/auto_upgrade.png')
+auto_upgrade_buybutton = Menu(sprite_menuGUI, pos_x=775, pos_y=250, graphic='assets/upgrademenu/buy_auto.png')
+
 # the player owns 0 value upgrades by default
 owned_value = 0
 
 # the first step in the value upgrade will cost 10 score; the default gain (which will be increased through this update) is 1.
 gain = 1
-cost = 10
+cost_value = 10
+cost_auto = 50
 
 ## the count variable here is actually really important because it will be the integer display of the scoring system.
 count = 0
@@ -60,8 +65,10 @@ count = 0
 sprite_text = pygame.sprite.Group()
 score_text = Text(sprite_text, font_size=50, text='Score: ' + str(round(float(count), 1)), color='black', pos_x=300, pos_y=50)
 gain_text = Text(sprite_text, font_size=30, text='Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', color='black', pos_x=300, pos_y=85)
-vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost)), color='white', pos_x=690, pos_y=150)
 
+vupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_value)), color='white', pos_x=690, pos_y=150)
+# aupgrade_cost_text = Text(sprite_text, font_size=30, text='COST: ' + str(float(cost_auto)), color='white', pos_x=690, pos_y=250)
+aupgrade_cost_text = Text(sprite_text, font_size=20, text='under construction', color='white', pos_x=690, pos_y=250)
 # locks the cursor inside the main game window
 pygame.event.set_grab(True)
 
@@ -71,7 +78,8 @@ while True:
     # fetches text that will have its contents updated.
     score_text.update_text('Score: ' + str(round(float(count), 1)), 'black')
     gain_text.update_text('Gain: ~ ' + str(round(float(gain), 2)) + ' /circle', 'black')
-    vupgrade_cost_text.update_text('COST: ' + str(float(cost)), 'white')
+    vupgrade_cost_text.update_text('COST: ' + str(float(cost_value)), 'white')
+    # aupgrade_cost_text.update_text('COST: ' + str(float(cost_auto)), 'white')
 
     ## fetches the x and y pos of the ball sprite which will be used for the pos randomizer later.
     for sprite in sprite_ball:
@@ -80,7 +88,7 @@ while True:
 
     ### for every value upgrade from the 2nd step onwards, calculate the upgrade's cost: 10 * (1.14 ^ number of owned upgrades).
     if int(owned_value) > 0:
-        cost = round(float(10 * math.pow(1.14, int(owned_value))), 1)
+        cost_value = round(float(10 * math.pow(1.14, int(owned_value))), 1)
 
     ## the game will draw out the main background first because it underlaps **EVERYTHING ELSE**.
     # turns the background white
